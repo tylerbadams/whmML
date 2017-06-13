@@ -1,0 +1,8 @@
+{
+  "rootDir": "/var/www/inertia/features/f",
+  "scripts": [
+    {
+    "wrapper": "macd.py"
+    }
+  ]
+}
