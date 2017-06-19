@@ -2,7 +2,10 @@
   "rootDir": "/var/www/inertia/features/f",
   "scripts": [
     {
-    "wrapper": "macd.py"
+    "wrapper": "macd/macd.py"
+    },
+    {
+    "wrapper": "deltas/deltas.py"
     }
   ]
 }
