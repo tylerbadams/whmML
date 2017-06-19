@@ -36,7 +36,7 @@ def format(entry):
 
 
 # Split ticker into groups of threshold in order to play nice with cryptocompare server
-args = [iter(symbols)] * threshold
+args = [iter([s['symbol'] for s in symbols])] * threshold
 symbols_for_dispatch = itertools.izip_longest(fillvalue='', *args)
 urls = [api_url + 'fsyms=USD&tsyms={0}'.format(','.join(temp)) for temp in symbols_for_dispatch]
 data = itertools.chain.from_iterable([requests.get(url).json()["RAW"]['USD'].items() for url in urls])

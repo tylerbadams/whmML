@@ -1,20 +1,65 @@
 {"symbols":
-  ["ETH",
-   "XRP",
-   "ETC",
-   "BTC",
-   "XEM",
-   "LTC",
-   "DASH",
-   "BTS",
-   "STRAT",
-   "XMR",
-   "WAVES",
-   "BCN",
-   "STEEM",
-   "ZEC",
-   "GNT"],
-   "db" : {
+    [{
+    "symbol": "ETH",
+    "subreddits": ["ethtrader", "etherium"]
+    },
+    {
+    "symbol": "XRP",
+    "subreddits": []
+    },
+    {
+    "symbol": "ETC",
+    "subreddits": []
+    },
+    {
+    "symbol": "BTC",
+    "subreddits": []
+    },
+    {
+    "symbol": "XEM",
+    "subreddits": []
+    },
+    {
+    "symbol": "LTC",
+    "subreddits": []
+    },
+    {
+    "symbol": "DASH",
+    "subreddits": []
+    },
+    {
+    "symbol": "BTS",
+    "subreddits": []
+    },
+    {
+    "symbol": "STRAT",
+    "subreddits": []
+    },
+    {
+    "symbol": "XMR",
+    "subreddits": []
+    },
+    {
+    "symbol": "WAVES",
+    "subreddits": []
+    },
+    {
+    "symbol": "BCN",
+    "subreddits": []
+    },
+    {
+    "symbol": "STEEM",
+    "subreddits": []
+    },
+    {
+    "symbol": "ZEC",
+    "subreddits": []
+    },
+    {
+    "symbol": "GNT",
+    "subreddits": []
+    }],
+    "db" : {
         "host": "localhost",
         "port": 27017,
         "name": "financial"
