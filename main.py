@@ -2,35 +2,42 @@ import requests
 import datetime
 from pymongo import MongoClient
 import json
-import time
+import itertools
 
-threshold = 20
 
-with open('ticker.json') as myTicker:
-    symbols = json.load(myTicker)['symbols']
+with open('config.json') as config_h:
+    config = json.load(config_h)
+    symbols = config['symbols']
+    db = config['db']
 
-client = MongoClient('localhost', 27017)
+threshold = 10
+client = MongoClient(db['host'], db['port'])
+db = client[db['name']]
+api_url = "https://min-api.cryptocompare.com/data/pricemultifull?"
 
-db = client['financial']
+timedeltas = [5, 10, 30, 60, 120, 240, 480, 960, 1920, 3840, 7680]
 collection  = 'ticker'
 
-while symbols:
-    if len(symbols) > threshold:
-        temp = symbols[0:threshold]
-        symbols = symbols[threshold :]
-    else:
-        temp = symbols[0:]
-        symbols = []
+def format(entry):
+	time = datetime.datetime.now()
+	name = entry[0]
+ 	price = float(entry[1]['PRICE'])
+ 	lastVolumeTo = float(entry[1]['LASTVOLUMETO'])
+ 	lastVolume = float(entry[1]['LASTVOLUME'])
 
-    res = requests.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms={0}&tsyms=USD'.format(','.join(temp)))
-    newData = res.json()['RAW']
-    tme = datetime.datetime.now()
-    for k in newData:
-        t = newData[k]['USD']
-        entry = {'timestamp': tme , 
-                 'ticker': k, 
-                 'price': float(t['PRICE']),
-                 'lastVolumeTo': float(t['LASTVOLUMETO']),
-                 'lastVolume': float(t['LASTVOLUME']) }
+	entry = {
+			'timestamp': time ,
+			 'ticker': entry[0],
+			 'price': price,
+			 'lastVolumeTo' : lastVolumeTo,
+			 'lastVolue' : lastVolume
+			}
+	return entry
 
-        db[collection].insert_one(entry)
+
+# Split ticker into groups of threshold in order to play nice with cryptocompare server
+args = [iter(symbols)] * threshold
+symbols_for_dispatch = itertools.izip_longest(fillvalue='', *args)
+urls = [api_url + 'fsyms=USD&tsyms={0}'.format(','.join(temp)) for temp in symbols_for_dispatch]
+data = itertools.chain.from_iterable([requests.get(url).json()["RAW"]['USD'].items() for url in urls])
+[db[collection].insert_one(format(entry)) for entry in data]
