@@ -19,7 +19,6 @@ timedeltas = [5, 10, 30, 60, 120, 240, 480, 960, 1920, 3840, 7680]
 collection  = 'ticker'
 
 def format(entry):
-	# TODO : mongo should have its own created timestamps
 	time = datetime.datetime.now()
 	name = entry[0]
  	price = float(entry[1]['PRICE'])
@@ -40,6 +39,5 @@ def format(entry):
 args = [iter(symbols)] * threshold
 symbols_for_dispatch = itertools.izip_longest(fillvalue='', *args)
 urls = [api_url + 'fsyms=USD&tsyms={0}'.format(','.join(temp)) for temp in symbols_for_dispatch]
-
-data = list(itertools.chain.from_iterable([requests.get(url).json()["RAW"]['USD'].items() for url in urls]))
+data = itertools.chain.from_iterable([requests.get(url).json()["RAW"]['USD'].items() for url in urls])
 [db[collection].insert_one(format(entry)) for entry in data]
